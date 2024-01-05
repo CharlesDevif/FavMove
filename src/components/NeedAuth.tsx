@@ -1,5 +1,5 @@
 import { Navigate, useLocation } from "react-router-dom"
-import { PropsWithChildren, useEffect } from "react"
+import { PropsWithChildren } from "react"
 import { useAppDispatch, useAppSelector } from "../store/hook"
 import { useSessionStorage } from "usehooks-ts"
 import { addToken } from "../store/tokenStore"
@@ -8,8 +8,8 @@ import { asyncShowFavori } from "../store/favoriStore"
 export default function NeedAuth({ children }: PropsWithChildren) {
 	const location = useLocation()
 
-	const [token, setToken] = useSessionStorage("token", "")
-	const [account, setAccount] = useSessionStorage("account", 0)
+	const [token] = useSessionStorage("token", "")
+	const [account] = useSessionStorage("account", 0)
 	const dispatch = useAppDispatch()
 
 	const tokenRedux = useAppSelector((store) => store.token)

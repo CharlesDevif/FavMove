@@ -1,4 +1,3 @@
-import { Link } from "react-router-dom"
 import "./fimlCardStylle.css"
 import { useAppDispatch, useAppSelector } from "../../store/hook"
 import { asyncAddFavori, asyncRemoveFavori } from "../../store/favoriStore"
