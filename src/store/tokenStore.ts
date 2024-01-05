@@ -5,6 +5,7 @@ interface TokenState {
   account: number; 
 }
 
+
 const initialState: TokenState = {
   token: "",
   account: 0, 
@@ -18,6 +19,7 @@ const initialState: TokenState = {
         return action.payload ; 
       },
       deleteToken: () => {
+        sessionStorage.clear()
         return initialState;
       },
     },

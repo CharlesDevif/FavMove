@@ -9,7 +9,7 @@ import "react-toastify/dist/ReactToastify.css"
 import { useSessionStorage } from "usehooks-ts"
 import { verifTokenApi } from "./lib/verifTokenApi"
 import { useAppDispatch } from "./store/hook"
-import { addToken } from "./store/tokenStore"
+import { addToken, deleteToken } from "./store/tokenStore"
 import FilmDetails from "./components/pages/filmsDetails/FilmDetails"
 
 export interface Root {
@@ -37,9 +37,14 @@ function App() {
 			})
 	}, [])
 
+	
+
+	
+
 	return (
 		<>
 			<ToastContainer />
+		
 			<Routes>
 				<Route
 					path="/"
