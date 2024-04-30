@@ -17,7 +17,7 @@ jobs:
         uses: bitovi/github-actions-react-to-github-pages@v1.2.3
         with:
           # Path of output files, default is `dist`
-          path: build
+          path: dist
           # Set to `true` to cache npm dependencies or `false` if not
           caching: true
           # Specifies the command to run the installation. Default is `npm ci`
