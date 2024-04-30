@@ -2,13 +2,13 @@ import {createSlice, PayloadAction } from "@reduxjs/toolkit";
 
 interface TokenState {
   token: string;
-  account: number; 
+  account: string; 
 }
 
 
 const initialState: TokenState = {
   token: "",
-  account: 0, 
+  account: "", 
 };
 
   export const tokenSlice = createSlice({
