@@ -1,0 +1,30 @@
+on:
+  pull_request:
+    branches: 
+      - "master"
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+jobs:
+  deploy-in-github-pages:
+    name: Deploy React to GitHub Pages
+    runs-on: ubuntu-latest
+    steps:
+      - id: build-publish
+        uses: bitovi/github-actions-react-to-github-pages@v1.2.3
+        with:
+          # Path of output files, default is `dist`
+          path: build
+          # Set to `true` to cache npm dependencies or `false` if not
+          caching: true
+          # Specifies the command to run the installation. Default is `npm ci`
+          install_command: npm ci
+          # Specifies the command to run after `install_command`. Default is `npm run build`
+          build_command: npm run build
+          # Set to `true` to checkout your code
+          checkout: true
+          
+    
