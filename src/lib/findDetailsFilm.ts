@@ -10,7 +10,7 @@ export  async function findDetailsFilm(tokenKey:string,id:number): Promise<Detai
       };
 
       
-      const res = await fetch(`https://api.themoviedb.org/3/movie/${id}?language=en-US`, options)
+      const res = await fetch(`https://api.themoviedb.org/3/movie/${id}?language=fr-FR`, options)
       return res.json();
       
       

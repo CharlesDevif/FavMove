@@ -11,6 +11,8 @@
 }
 .favori{
     width: 100%;
+    display: flex;
+    justify-content: space-between;
 }
 
 .imgCard img{
@@ -22,17 +24,16 @@
     padding: 0.5vw;
 }
 
-#retireFav{
+.retire{
     padding: 0.6vw;
-    width: 8vw;
+   
     border: 1px solid red;
     font-weight: 700;
    background-color: transparent;
     cursor: pointer;
 }
-#ajoutFav{
+.ajout{
     padding: 0.6vw;
-    width: 8vw;
     background-color: red;
     border: none;
     cursor: pointer;

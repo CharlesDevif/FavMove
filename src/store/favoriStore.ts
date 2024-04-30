@@ -42,6 +42,24 @@ export const asyncRemoveFavori = (token: string, account: number, idFilms: numbe
         });
     };
 }
+export const asyncAddList = (token: string, account: number, idFilms: number, favori:boolean) => {
+    return async (dispatch: AppDispatch) => {
+        await addfavoriFilms(token, account, idFilms, favori ).then((res) => {
+            console.log(res);
+            
+            dispatch(addFavori(idFilms));
+        });
+    };
+}
+export const asyncRemoveList = (token: string, account: number, idFilms: number, favori:boolean) => {
+    return async (dispatch: AppDispatch) => {
+        await addfavoriFilms(token, account, idFilms, favori ).then((res) => {
+            console.log(res);
+            
+            dispatch(deleteFavori(idFilms));
+        });
+    };
+}
 
 export const favoriSlice = createSlice({
     name: "favori",

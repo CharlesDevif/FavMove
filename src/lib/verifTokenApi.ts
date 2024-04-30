@@ -13,7 +13,7 @@ export async function verifTokenApi(tokenKey: string): Promise<Root> {
 		},
 	}
 
-	const res = await fetch("https://api.themoviedb.org/3/authentication", options)
+	const res = await fetch("https://api.themoviedb.org/3/authentication/guest_session/new", options)
 	return res.json()
 
 }

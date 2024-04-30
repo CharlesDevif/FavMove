@@ -38,7 +38,7 @@ export default function Login() {
     verifTokenApi(localToken.token).then((res) => {
       if (res.success) {
         setToken(localToken.token)
-        setAccount(localToken.account)
+        setAccount(res.guest_session_id)
         dispatch(addToken({ token: localToken.token, account: localToken.account }))
         dispatch(asyncShowFavori(localToken.token, localToken.account, 1))
         navigate(from, { replace: true })
@@ -59,8 +59,7 @@ export default function Login() {
             <div id="divInputConteneur">
               <label htmlFor="token">Token</label>
               <input type="text" id="tokenForm" name="token" onChange={handleChange} />
-              <label htmlFor="">Id du compte</label>
-              <input type="text" id="accountForm" name="account" onChange={handleChange} />
+             
             </div>
             <input type="submit" />
           </div>
