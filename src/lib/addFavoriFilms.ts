@@ -5,7 +5,7 @@ export interface RepponseI {
   }
   
 
-export default async function addfavoriFilms(tokenKey: string, account: number, idFilms: number,favori:boolean): Promise<RepponseI[]> {
+export default async function addfavoriFilms(tokenKey: string, account: string, idFilms: number,favori:boolean): Promise<RepponseI[]> {
 	const options = {
         method: 'POST',
         headers: {

@@ -6,7 +6,7 @@ import { useNavigate } from "react-router-dom"
 export default function FilmCard({ film }: any) {
 	const favori = useAppSelector((store) => store.favori)
 	const isFavori = favori.includes(film.id)
-	const token = useAppSelector((store) => store.token)
+	const user = useAppSelector((store) => store.user)
 
 	const navigate = useNavigate();
 
@@ -17,10 +17,10 @@ export default function FilmCard({ film }: any) {
 	const dispatch = useAppDispatch()
 
 	const handleDeleteFavori = async () => {
-		dispatch(asyncRemoveFavori(token.token, token.account, film.id, false))
+		dispatch(asyncRemoveFavori(user.token, user.sessionId, film.id, false))
 	}
 	const handleAddFavori = async () => {
-		dispatch(asyncAddFavori(token.token, token.account, film.id, true))
+		dispatch(asyncAddFavori(user.token, user.sessionId, film.id, true))
 	}
 
 	const imgCardStyle = {

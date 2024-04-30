@@ -67,4 +67,20 @@
   button:hover {
     background-color: #3838ff;
   }
+ #containerForm{
+  display: flex;
+  flex-direction: column;
+  align-items: center;
   
+ }
+
+ #containerForm input{
+  width: 30vw;
+  
+ }
+ 
+ #containerForm button{
+  margin-top: 2vw;
+  width: 20vw;
+  
+ }

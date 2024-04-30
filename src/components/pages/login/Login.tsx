@@ -1,70 +1,75 @@
-import { ChangeEvent, FormEvent, useState } from "react"
-import { useLocation, useNavigate } from "react-router-dom"
-import "./loginStyle.css"
-import { useAppDispatch } from "../../../store/hook"
-import { addToken } from "../../../store/tokenStore"
-import { verifTokenApi } from "../../../lib/verifTokenApi"
-import { toast } from "react-toastify"
-import { useSessionStorage } from 'usehooks-ts'
-import { asyncShowFavori } from "../../../store/favoriStore"
+import { ChangeEvent, FormEvent, useEffect, useRef, useState } from "react";
+import "./loginStyle.css";
+import { createReqToken, redirectToAuthorization } from "../../../lib/verifTokenApi";
+import { toast } from "react-toastify";
+import { useSessionStorage } from "usehooks-ts";
+import { useNavigate } from "react-router-dom";
 
 interface TokenState {
-  token: string
-  account: number
+  token: string;
+  account: string;
+  apiKey: string;
 }
 
 export default function Login() {
-  const navigate = useNavigate()
-  const location = useLocation()
-  const dispatch = useAppDispatch()
+  const isMounted = useRef<boolean>(false);
+  const navigate = useNavigate();
+
   const [, setToken] = useSessionStorage('token', "")
-  const [, setAccount] = useSessionStorage('account', 0)
+  const [, setApiKey] = useSessionStorage('apiKey', "")
+  const [session,] = useSessionStorage('session', "");
 
-  const from = location.state?.from?.pathname || "/"
+  useEffect(() => {
+    if (!isMounted.current) {
+      if (session) {
+        navigate('/');
+      }
 
-  const [localToken, setLocalToken] = useState<TokenState>({} as TokenState)
+      isMounted.current = true;
+    }
+
+  }, []);
+
+
+  const [localToken, setLocalToken] = useState<TokenState>({} as TokenState);
 
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
-    setLocalToken((prevState) => {
-      return {
-        ...prevState,
-        [e.target.name]: e.target.value,
-      }
-    })
+    setLocalToken((prevState) => ({
+      ...prevState,
+      [e.target.name]: e.target.value,
+    }));
   }
 
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
-    e.preventDefault()
-    verifTokenApi(localToken.token).then((res) => {
-      if (res.success) {
-        setToken(localToken.token)
-        setAccount(res.guest_session_id)
-        dispatch(addToken({ token: localToken.token, account: localToken.account }))
-        dispatch(asyncShowFavori(localToken.token, localToken.account, 1))
-        navigate(from, { replace: true })
-      } else {
-        toast.error('Le token est incorrect')
-      }
-    })
+    e.preventDefault();
+    createReqToken(localToken.token).then((res: any) => {
+      setToken(localToken.token)
+      setApiKey(localToken.apiKey)
+      redirectToAuthorization(res.request_token);
+    }).catch((error) => {
+      toast.error("Error creating request token: " + error.message);
+    });
   }
 
   return (
     <>
       <div id="conteneurDivForm">
         <div id="imageForm"></div>
-
         <form id="formLogin" onSubmit={handleSubmit}>
           <div id="conteneurFrom">
             <h1>Connexion</h1>
-            <div id="divInputConteneur">
-              <label htmlFor="token">Token</label>
+            <div className="divInputConteneur">
+              <label htmlFor="tokenForm">Token</label>
               <input type="text" id="tokenForm" name="token" onChange={handleChange} />
-             
+            </div>
+            <div className="divInputConteneur">
+              <label htmlFor="apiKeyForm">Clé API</label>
+              <input type="text" id="apiKeyForm" name="apiKey" onChange={handleChange} />
             </div>
             <input type="submit" />
           </div>
         </form>
       </div>
     </>
-  )
+  );
 }

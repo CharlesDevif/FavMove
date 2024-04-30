@@ -1,0 +1,20 @@
+#pageListContainer {
+    display: flex;
+    height: 100vh;
+    width: 100vw;
+    padding: 4vw;
+}
+
+#lists {
+    height: 100%;
+    width: 30%;
+    padding: 2vw;
+    
+}
+
+#filmsInList {
+    height: 100%;
+    width: 70%;
+    padding: 2vw;
+   
+}

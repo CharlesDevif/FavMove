@@ -1,6 +1,6 @@
 import { Film } from "../type/films";
 
-export default async function favoriFilms(tokenKey: string, account: number, page: number): Promise<Film[]> {
+export default async function favoriFilms(tokenKey: string, account: string, page: number): Promise<Film[]> {
     const options = {
         method: "GET",
         headers: {

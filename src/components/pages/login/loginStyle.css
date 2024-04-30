@@ -29,8 +29,3 @@
     align-items: center;
 }
 
-#divInputConteneur{
-    display: flex;
-    justify-content: center;
-    flex-direction: column;
-}

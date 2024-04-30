@@ -1,12 +1,12 @@
 import {configureStore} from "@reduxjs/toolkit";
-import {tokenReducer} from './tokenStore.ts'
+import {userReducer} from './userStore.ts'
 import { favoriReducer } from "./favoriStore.ts";
 import { listReducer } from "./listStore.ts";
 
 
 export const store = configureStore({
     reducer: {
-        token: tokenReducer,
+        user: userReducer,
         favori: favoriReducer,
         list: listReducer
     }

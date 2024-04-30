@@ -1,0 +1,74 @@
+#header {
+    background-color: #333; /* Couleur de fond du header */
+    color: white;
+    padding: 1vw; /* Espacement autour des éléments dans le header */
+    display: flex;
+    align-items: center;
+    justify-content: space-between; /* Espacement entre les éléments du header */
+    position: sticky; /* Rendre le header sticky */
+    top: 0; /* Positionner le header en haut de la page */
+    z-index: 1000; /* Assurer que le header reste au-dessus des autres contenus */
+    width: 100%; /* Assurer que le header prend toute la largeur de la fenêtre */
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1); /* Ajouter une légère ombre pour un effet de profondeur */
+}
+.btnMenu{
+    display: flex;
+    justify-content: space-between;
+    width: 60%;
+}
+/* Styles pour le bouton burger */
+.burger-menu {
+    display: block; /* Toujours afficher le bouton burger */
+    cursor: pointer;
+    z-index: 1000; /* Assurer qu'il est au-dessus du menu */
+}
+
+.burger-menu div {
+    width: 25px; /* Largeur des barres du menu burger */
+    height: 3px; /* Hauteur des barres du menu burger */
+    background-color: white;
+    margin: 5px 0; /* Espacement vertical entre les barres */
+    transition: transform 0.4s, opacity 0.4s; /* Transition pour l'animation des barres */
+}
+
+/* Animation pour le burger menu : transformation en X */
+.burger-menu.active div:nth-child(1) {
+    transform: rotate(45deg) translate(5px, 5px);
+}
+
+.burger-menu.active div:nth-child(2) {
+    opacity: 0;
+}
+
+.burger-menu.active div:nth-child(3) {
+    transform: rotate(-45deg) translate(7px, -8px);
+}
+
+/* Styles pour les éléments de menu */
+.menu-items {
+    position: absolute;
+    top: 100%; /* Positionner juste en dessous du header */
+    right: 0;
+    background-color: #333;
+    width: 200px; /* Largeur du menu déroulant */
+    display: none; /* Caché par défaut */
+    box-shadow: 0 8px 16px rgba(0,0,0,0.2); /* Ombre pour le menu déroulant */
+}
+
+.menu-items.active {
+    display: block; /* Afficher quand le menu est actif */
+}
+
+.menu-items button {
+    width: 100%; /* Prendre toute la largeur du menu */
+    padding: 10px 20px; /* Espacement intérieur pour les boutons */
+    text-align: left; /* Texte aligné à gauche */
+    border: none; /* Pas de bordure pour les boutons */
+    background-color: transparent; /* Fond transparent pour les boutons */
+    color: white; /* Texte en blanc */
+    font-size: 16px; /* Taille de police pour les boutons */
+}
+
+.menu-items button:hover {
+    background-color: #555; /* Couleur de fond au survol */
+}

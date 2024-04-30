@@ -1,33 +1,66 @@
-import { Navigate, useLocation } from "react-router-dom"
-import { PropsWithChildren } from "react"
-import { useAppDispatch, useAppSelector } from "../store/hook"
-import { useSessionStorage } from "usehooks-ts"
-import { addToken } from "../store/tokenStore"
-import { asyncShowFavori } from "../store/favoriStore"
+import { Navigate, useLocation, useNavigate } from "react-router-dom";
+import { PropsWithChildren, useEffect } from "react";
+import { useAppDispatch, useAppSelector } from "../store/hook";
+import { addUser } from "../store/userStore";
+import { asyncShowFavori } from "../store/favoriStore";
+import { createSessionId, getDetailsAcount } from "../lib/verifTokenApi";
+import { useSessionStorage } from "usehooks-ts";
 
 export default function NeedAuth({ children }: PropsWithChildren) {
-	const location = useLocation()
+	const location = useLocation();
+	const navigate = useNavigate();
+	const dispatch = useAppDispatch();
+	const [session, setSession] = useSessionStorage('session', "");
+	const [token] = useSessionStorage("token", "");
+	const [apiKey] = useSessionStorage("apiKey", "");
+	const [username,setUsername] = useSessionStorage("username", "");
+	const [accountId,setAccountId] = useSessionStorage("accountId", "");
 
-	const [token] = useSessionStorage("token", "")
-	const [account] = useSessionStorage("account", 0)
-	const dispatch = useAppDispatch()
+	const userRedux = useAppSelector((state) => state.user);
 
-	const tokenRedux = useAppSelector((store) => store.token)
+	const favori = useAppSelector((state) => state.favori);
 
-	const favori = useAppSelector((store) => store.favori)
+	useEffect(() => {
+		async function handleSession() {
 
-    
 
-	if (tokenRedux.account && tokenRedux.token) {
-		if (favori.length === 0) {
-			dispatch(asyncShowFavori(tokenRedux.token, tokenRedux.account, 1))
+			const queryParams = new URLSearchParams(location.search);
+			const requestToken = queryParams.get('request_token');
+			if (requestToken && !session) {
+				
+				try {
+					const sessionId = await createSessionId(requestToken, apiKey);
+					const detailsAcount = await getDetailsAcount(sessionId,apiKey)
+					setSession(sessionId);
+					setUsername(detailsAcount.username)
+					setAccountId(detailsAcount.id)
+					dispatch(addUser({ token: userRedux.token, sessionId: sessionId, apiKey: userRedux.apiKey,username: detailsAcount.username,accountId:detailsAcount.id }));
+
+					navigate('/'); // Redirect to home or dashboard after login
+				} catch (error) {
+					console.error('Failed to create session', error);
+					navigate('/login'); // Redirect back to login on failure
+				}
+			}
 		}
-		return children
-	} else if (token && account) {
+		handleSession();
+	}, []);
+
+
+	if (userRedux.sessionId && userRedux.token) {
+		
+		
 		if (favori.length === 0) {
-			dispatch(asyncShowFavori(token, account, 1))
+			dispatch(asyncShowFavori(userRedux.token, userRedux.sessionId, 1));
 		}
-		dispatch(addToken({ token: token, account: account }))
-		return children
-	} else return <Navigate to="/login" state={{ from: location }} />
+		return children;
+	} else if (token && apiKey && session) {
+		
+		if (favori.length === 0) {
+			dispatch(asyncShowFavori(token, session, 1));
+		}
+		dispatch(addUser({ token:token, sessionId:session, apiKey:apiKey , username:username,accountId:accountId}));
+		return children;
+	} else return <Navigate to="/login" state={{ from: location }} />;
+
 }

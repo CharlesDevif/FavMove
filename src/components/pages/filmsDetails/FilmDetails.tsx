@@ -11,24 +11,26 @@ export default function FilmDetails() {
     const filmId = id ? parseInt(id) : 0;
 
     const isMounted = useRef<boolean>(false);
-    const token = useAppSelector((store) => store.token);
+    const token = useAppSelector((store) => store.user.token);
     const [detailsFilm, setDetailsFilm] = useState<DetailedFilm>({} as DetailedFilm);
     const [isLoading, setIsLoading] = useState(true);
     const [error, setError] = useState('');
 
     useEffect(() => {
         if (!isMounted.current) {
-            findDetailsFilm(token.token, filmId).then((res) => {
+            findDetailsFilm(token, filmId).then((res) => {
 				console.log(res);
                 setDetailsFilm(res);
                 setIsLoading(false);
             }).catch(err => {
+                console.log(err);
+                
                 setError('Failed to fetch film details');
                 setIsLoading(false);
             });
             isMounted.current = true;
         }
-    }, [token.token, filmId]);
+    }, [token, filmId]);
 
     if (isLoading) return <div>Loading...</div>;
     if (error) return <div>Error: {error}</div>;

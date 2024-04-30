@@ -15,6 +15,36 @@ export  async function findMostRated(tokenKey:string,page:number): Promise<ListF
       
       
 }
+export  async function findMostPopular(tokenKey:string,page:number): Promise<ListFilm>{
+    const options = {
+        method: 'GET',
+        headers: {
+          accept: 'application/json',
+          Authorization: `Bearer ${tokenKey}`
+        }
+      };
+
+      
+      const res = await fetch(`https://api.themoviedb.org/3/movie/popular?language=fr-FR&page=${page}`, options)
+      return res.json();
+      
+      
+}
+export  async function findUpcoming(tokenKey:string,page:number): Promise<ListFilm>{
+    const options = {
+        method: 'GET',
+        headers: {
+          accept: 'application/json',
+          Authorization: `Bearer ${tokenKey}`
+        }
+      };
+
+      
+      const res = await fetch(`https://api.themoviedb.org/3/movie/upcoming?language=fr-FR&page=${page}`, options)
+      return res.json();
+      
+      
+}
 
 export async function findMoviesByQuery(tokenKey: string, query: { year?: string, actor?: string, director?: string }): Promise<ListFilm> {
   let url = `https://api.themoviedb.org/3/discover/movie?language=fr-FR&`;

@@ -1,8 +1,12 @@
 
 
 // Créer une nouvelle liste
-export async function createList(tokenKey: string, sessionId: string, name: string): Promise<any> {
-    const url = `https://api.themoviedb.org/3/list?session_id=${sessionId}`;
+export async function createList(apiKey: string, tokenKey: string, sessionId: string, name: string, description: string, language: string): Promise<any> {
+    const url = `https://api.themoviedb.org/3/list?api_key=${apiKey}&session_id=${sessionId}`;
+
+    if (!language) {
+        language = 'fr'
+    }
     const options = {
         method: 'POST',
         headers: {
@@ -10,7 +14,7 @@ export async function createList(tokenKey: string, sessionId: string, name: stri
             'content-type': 'application/json',
             Authorization: `Bearer ${tokenKey}`
         },
-        body: JSON.stringify({ name, session_id: sessionId })
+        body: JSON.stringify({ name, description, language })
     };
 
     const response = await fetch(url, options);
@@ -18,7 +22,7 @@ export async function createList(tokenKey: string, sessionId: string, name: stri
 }
 
 // Supprimer une liste
-export async function deleteList(tokenKey: string,listId: string): Promise<any> {
+export async function deleteList(tokenKey: string, listId: string): Promise<any> {
     const url = `https://api.themoviedb.org/3/list/${listId}`;
     const options = {
         method: 'DELETE',
@@ -33,7 +37,7 @@ export async function deleteList(tokenKey: string,listId: string): Promise<any> 
 }
 
 // Ajouter un film à une liste
-export async function addFilmToList(tokenKey: string,listId: string, filmId: string): Promise<any> {
+export async function addFilmToList(tokenKey: string, listId: string, filmId: string): Promise<any> {
     const url = `https://api.themoviedb.org/3/list/${listId}/add_item`;
     const options = {
         method: 'POST',
@@ -50,7 +54,7 @@ export async function addFilmToList(tokenKey: string,listId: string, filmId: str
 }
 
 // Supprimer un film d'une liste
-export async function removeFilmFromList(tokenKey: string,listId: string, filmId: string): Promise<any> {
+export async function removeFilmFromList(tokenKey: string, listId: string, filmId: string): Promise<any> {
     const url = `https://api.themoviedb.org/3/list/${listId}/remove_item`;
     const options = {
         method: 'POST',
@@ -67,8 +71,8 @@ export async function removeFilmFromList(tokenKey: string,listId: string, filmId
 }
 
 // Récupérer toutes les listes de films de l'utilisateur
-export async function fetchLists(tokenKey: string,): Promise<any> {
-    const url = `https://api.themoviedb.org/3/account/null/lists?page=1`;
+export async function fetchLists(tokenKey: string,accountId:string,sessionId:string): Promise<any> {
+    const url = `https://api.themoviedb.org/3/account/${accountId}/lists?page=1&session_id=${sessionId}`;
     const options = {
         method: 'GET',
         headers: {
@@ -76,7 +80,9 @@ export async function fetchLists(tokenKey: string,): Promise<any> {
             Authorization: `Bearer ${tokenKey}`
         }
     };
+console.log(url);
 
     const response = await fetch(url, options);
+    
     return response.json();
 }

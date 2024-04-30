@@ -13,7 +13,7 @@ export interface RepponseI {
 
 const initialState: number[] = [];
 
-export const asyncShowFavori = (token: string, account: number, page: number) => {
+export const asyncShowFavori = (token: string, account: string, page: number) => {
 
 
     return async (dispatch: AppDispatch) => {
@@ -24,7 +24,7 @@ export const asyncShowFavori = (token: string, account: number, page: number) =>
         });
     };
 }
-export const asyncAddFavori = (token: string, account: number, idFilms: number, favori:boolean) => {
+export const asyncAddFavori = (token: string, account: string, idFilms: number, favori:boolean) => {
     return async (dispatch: AppDispatch) => {
         await addfavoriFilms(token, account, idFilms, favori ).then((res) => {
             console.log(res);
@@ -33,7 +33,7 @@ export const asyncAddFavori = (token: string, account: number, idFilms: number, 
         });
     };
 }
-export const asyncRemoveFavori = (token: string, account: number, idFilms: number, favori:boolean) => {
+export const asyncRemoveFavori = (token: string, account: string, idFilms: number, favori:boolean) => {
     return async (dispatch: AppDispatch) => {
         await addfavoriFilms(token, account, idFilms, favori ).then((res) => {
             console.log(res);
@@ -42,24 +42,7 @@ export const asyncRemoveFavori = (token: string, account: number, idFilms: numbe
         });
     };
 }
-export const asyncAddList = (token: string, account: number, idFilms: number, favori:boolean) => {
-    return async (dispatch: AppDispatch) => {
-        await addfavoriFilms(token, account, idFilms, favori ).then((res) => {
-            console.log(res);
-            
-            dispatch(addFavori(idFilms));
-        });
-    };
-}
-export const asyncRemoveList = (token: string, account: number, idFilms: number, favori:boolean) => {
-    return async (dispatch: AppDispatch) => {
-        await addfavoriFilms(token, account, idFilms, favori ).then((res) => {
-            console.log(res);
-            
-            dispatch(deleteFavori(idFilms));
-        });
-    };
-}
+
 
 export const favoriSlice = createSlice({
     name: "favori",
