@@ -25,6 +25,24 @@ export default function Home() {
   const [actor, setActor] = useState<string>("");
   const [director, setDirector] = useState<string>("");
   const [Title, setTitle] = useState<string>('')
+  const [pageIndex, setPageIndex] = useState<number>(1)
+
+  const [, setIsLoading] = useState(false);
+  const [, setError] = useState('');
+
+
+
+  // Au début du composant
+  const [totalPages,] = useState(10);  // Supposons que vous récupérez cela de l'API
+
+  // Plus bas dans le composant
+  const handleNextPage = () => {
+    setPageIndex((prev) => (prev < totalPages ? prev + 1 : prev));
+  };
+
+  const handlePreviousPage = () => {
+    setPageIndex((prev) => (prev > 1 ? prev - 1 : prev));
+  };
 
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false); // Ajout de l'état pour contrôler l'ouverture de la modal
 
@@ -32,27 +50,57 @@ export default function Home() {
 
   useEffect(() => {
     if (!isMounted.current) {
-      findMostRated(user.token, 1).then((res) => setListFilms(res));
       fetchGenres(user.token).then((data) => {
         setGenres(data);
         setFilteredGenres(data);
       });
-      setTitle('Films les mieux notés')
-
+      setTitle('Films les mieux notés');
       isMounted.current = true;
     }
 
-    const handleClickOutside = (event: MouseEvent) => {
+    // Fonction pour charger les films basée sur le type actuel et l'index de page
+    const loadFilms = () => {
+      setIsLoading(true);
+      switch (Title) {
+        case 'Films les mieux notés':
+          findMostRated(user.token, pageIndex)
+            .then(setListFilms)
+            .catch(() => setError("Erreur lors du chargement des films"))
+            .finally(() => setIsLoading(false));
+          break;
+        case 'Films qui vont arrivées':
+          findUpcoming(user.token, pageIndex)
+            .then(setListFilms)
+            .catch(() => setError("Erreur lors du chargement des films"))
+            .finally(() => setIsLoading(false));
+          break;
+        case 'Films Populaires':
+          findMostPopular(user.token, pageIndex)
+            .then(setListFilms)
+            .catch(() => setError("Erreur lors du chargement des films"))
+            .finally(() => setIsLoading(false));
+          break;
+        default:
+          // Gérer d'autres types ici si nécessaire
+          break;
+      }
+    };
+
+    loadFilms();  // Appeler cette fonction à chaque changement de pageIndex
+
+
+  }, [pageIndex, Title]);  // Ajout de Title pour recharger les films si le type change également
+
+  useEffect(() => {
+    const handleClickOutside = (event: any) => {
       if (containerRef.current && !containerRef.current.contains(event.target as Node)) {
         setIsInputFocused(false);
       }
     };
-
     document.addEventListener("click", handleClickOutside);
-    return () => {
-      document.removeEventListener("click", handleClickOutside);
-    };
-  }, []);
+    return () => document.removeEventListener("click", handleClickOutside);
+  }, []); // Ce useEffect ne dépend d'aucune variable mutable et s'exécute une seule fois
+
 
   const handleFilterChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const searchText = event.target.value.toLowerCase();
@@ -65,22 +113,22 @@ export default function Home() {
   };
 
   const handleMostRateClick = () => {
-    findMostRated(user.token, 1).then((res) => setListFilms(res));
+    findMostRated(user.token, pageIndex).then((res) => setListFilms(res));
     setIsInputFocused(false);
     setTitle('Films les mieux notés')
   };
   const handleUpcomingClick = () => {
-    findUpcoming(user.token, 1).then((res) => setListFilms(res));
+    findUpcoming(user.token, pageIndex).then((res) => setListFilms(res));
     setIsInputFocused(false);
     setTitle('Films qui vont arrivées')
   };
   const handlePopularClick = () => {
-    findMostPopular(user.token, 1).then((res) => setListFilms(res));
+    findMostPopular(user.token, pageIndex).then((res) => setListFilms(res));
     setIsInputFocused(false);
     setTitle('Films Populaires')
   };
   const handleGenreClick = (genreId: number, genreName: string) => {
-    findMoviesByGenre(user.token, genreId, 1).then((res) => setListFilms(res));
+    findMoviesByGenre(user.token, genreId, pageIndex).then((res) => setListFilms(res));
     setIsInputFocused(false);
     setTitle('Films filtré par ' + genreName)
   };
@@ -179,6 +227,10 @@ export default function Home() {
         {listFilms.results?.map((u) => (
           <FilmCard film={u} key={u.id} />
         ))}
+        <div className="containerBtnPage">
+          <button onClick={handlePreviousPage}>Page précédente</button>
+          <button onClick={handleNextPage}>Page suivante</button>
+        </div>
       </section>
       <ModalList isOpen={isModalOpen} onClose={handleModalClose} onCreateList={handleCreateList} />
     </>

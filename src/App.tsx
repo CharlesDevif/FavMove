@@ -1,12 +1,13 @@
 import { Route, Routes } from "react-router-dom"
 import "./App.css"
 import Home from "./components/pages/home/Home"
-import Login from "./components/pages/login/Login"
 import NeedAuth from "./components/NeedAuth"
 import { ToastContainer } from "react-toastify"
 import "react-toastify/dist/ReactToastify.css"
 import FilmDetails from "./components/pages/filmsDetails/FilmDetails"
 import Lists from "./components/pages/lists/Lists"
+import Register from "./components/pages/login/Register"
+import Login from "./components/pages/login/NewLogin"
 
 export interface Root {
 	success: boolean
@@ -34,6 +35,7 @@ function App() {
 
 				<Route path="/lists" element={<NeedAuth><Lists /></NeedAuth>} />
 				<Route path="/login" element={<Login />} />
+				<Route path="/register" element={<Register />} />
 			</Routes>
 		</>
 	)

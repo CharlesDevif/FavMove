@@ -19,6 +19,10 @@
   box-sizing: border-box;
 }
 
+h1{
+  font-weight: 900;
+}
+
 /* Remove default margin */
 body,
 h1,
@@ -68,11 +72,12 @@ a {
 button {
   border: none;
   outline: none;
-  background: #2424ff;
+  background: #2E769E;
   cursor: pointer;
 }
+
 button:hover {
-  background: #3838ff;
+  background: #2E769E;
 }
 
 .btn {
@@ -97,6 +102,8 @@ button {
 
 input {
   height: 3vw;
+  background-color: #414141;
+  border: 0;
 }
 
 /* Remove default table styles */
@@ -116,8 +123,16 @@ body {
 }
 
 
-.divInputConteneur{
+.divInputConteneur {
   display: flex;
   justify-content: center;
   flex-direction: column;
+
+}
+
+.containerBtnPage {
+  width: 40%;
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 2vw;
 }

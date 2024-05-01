@@ -14,6 +14,9 @@ export default function Lists() {
     const [lists, setLists] = useState<List[]>([]);
     // const [listFilms, setListFilms] = useState<ListFilm>({} as ListFilm);
 
+
+    
+
     useEffect(() => {
         if (!isMounted.current) {
             fetchLists(user.token, user.accountId, user.sessionId).then((res) => {
@@ -32,8 +35,8 @@ export default function Lists() {
                     {lists.map((list) => (
                         <div key={list.id} className="listItem">
                             <h3>{list.name}</h3>
-                            <p>Description: {list.description}</p>
-                            <p>Nombre d'items: {list.item_count}</p>
+                            <p>{list.description}</p>
+                            <p>{list.item_count}</p>
                             <button onClick={() => navigate(`/list/${list.id}`)}>Voir les films</button>
                         </div>
                     ))}

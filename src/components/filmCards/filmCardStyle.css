@@ -1,0 +1,82 @@
+.containerCard {
+    width: 15vw;
+    height: 25vw; /* Increased height for better visibility of details */
+    background-color: dimgrey;
+    border-radius: 0.8vw;
+    margin: 1vw;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column; /* Changed to column to better organize contents */
+    justify-content: space-between; /* Adjust content distribution */
+    transition: transform 0.3s ease-in-out, box-shadow 0.3s ease;
+    box-shadow: 0 0.4vw 0.8vw rgba(0, 0, 0, 0.2);
+    position: relative; /* Added for absolute positioning of children if needed */
+    animation: fadeIn 1s; /* Animation for fade-in effect */
+}
+
+.containerCard:hover {
+    z-index: 999;
+    transform: scale(1.3); /* Adjust scale for subtlety */
+    box-shadow: 0 0.8vw 1.6vw rgba(0, 0, 0, 0.4); /* Enhance shadow on hover */
+}
+
+.favori {
+    position: absolute; /* Positioned absolutely to sit at the bottom */
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    background-color: rgba(0, 0, 0, 0.75); /* Darker for better visibility */
+    box-shadow: 0 -0.2vw 0.4vw rgba(0, 0, 0, 0.2); /* Adds shadow to separate from the main image */
+}
+
+.filmDetails {
+    padding: 0.8vw; /* Consistent padding */
+    color: white;
+    text-shadow: 0.1vw 0.1vw 0.3vw rgba(0, 0, 0, 0.8);
+    background: rgba(0, 0, 0, 0.5); /* Semi-transparent background */
+    flex-grow: 1; /* Allows details to fill the space */
+    display: flex;
+    flex-direction: column;
+    justify-content: center; /* Centers content vertically */
+    align-items: center; /* Centers content horizontally */
+}
+
+.retire, .ajout {
+    padding: 0.3vw 1vw !important; /* Larger padding for better clickability */
+    border-radius: 0.4vw;
+    font-size: 0.9vw; /* Adjust font size for aesthetics */
+    font-weight: bold;
+    cursor: pointer;
+    transition: background-color 0.2s ease, color 0.2s ease; /* Smooth color transition */
+    border: none; /* Remove borders to clean up button appearance */
+}
+
+.retire {
+    background-color: transparent;
+    color: red; /* Use color for text instead of background for 'retire' */
+}
+
+.retire:hover, .ajout:hover {
+    background-color: darkred;
+    color: white;
+}
+
+.ajout {
+    background-color: red;
+    color: white;
+}
+
+/* Ensures that text is readable and not overlapping */
+.voteAverage {
+    font-size: 1.2vw; /* Slightly larger font for visibility */
+    font-weight: bold;
+}
+
+/* Smooth appearance for images and better layout */
+.imgCard img {
+    width: 100%;
+    height: auto; /* Adjust height to auto for proper aspect ratio */
+    object-fit: cover; /* Ensures the image covers the space without distorting */
+}
