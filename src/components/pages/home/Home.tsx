@@ -2,14 +2,20 @@ import React, { useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAppDispatch, useAppSelector } from "../../../store/hook";
 import { ListFilm } from "../../../type/films";
-import { fetchGenres, findMostPopular, findMostRated, findMoviesByGenre, findMoviesByQuery, findUpcoming } from "../../../lib/findMostRated";
+import {
+  fetchGenres,
+  findMostPopular,
+  findMostRated,
+  findMoviesByGenre,
+  findMoviesByQuery,
+  findUpcoming,
+} from "../../../lib/findMostRated";
 import FilmCard from "../../filmCards/FilmCard";
 import "./home.css";
 import { deleteUser } from "../../../store/userStore";
 import ModalList from "../../modal/ModalList";
 import { createList } from "../../../lib/listeReq";
 import Header from "../../header/Header";
-
 
 export default function Home() {
   const isMounted = useRef<boolean>(false);
@@ -24,16 +30,14 @@ export default function Home() {
   const [year, setYear] = useState<string>("");
   const [actor, setActor] = useState<string>("");
   const [director, setDirector] = useState<string>("");
-  const [Title, setTitle] = useState<string>('')
-  const [pageIndex, setPageIndex] = useState<number>(1)
+  const [Title, setTitle] = useState<string>("");
+  const [pageIndex, setPageIndex] = useState<number>(1);
 
   const [, setIsLoading] = useState(false);
-  const [, setError] = useState('');
-
-
+  const [, setError] = useState("");
 
   // Au début du composant
-  const [totalPages,] = useState(10);  // Supposons que vous récupérez cela de l'API
+  const [totalPages] = useState(10); // Supposons que vous récupérez cela de l'API
 
   // Plus bas dans le composant
   const handleNextPage = () => {
@@ -54,7 +58,7 @@ export default function Home() {
         setGenres(data);
         setFilteredGenres(data);
       });
-      setTitle('Films les mieux notés');
+      setTitle("Films les mieux notés");
       isMounted.current = true;
     }
 
@@ -62,19 +66,19 @@ export default function Home() {
     const loadFilms = () => {
       setIsLoading(true);
       switch (Title) {
-        case 'Films les mieux notés':
+        case "Films les mieux notés":
           findMostRated(user.token, pageIndex)
             .then(setListFilms)
             .catch(() => setError("Erreur lors du chargement des films"))
             .finally(() => setIsLoading(false));
           break;
-        case 'Films qui vont arrivées':
+        case "Films qui vont arrivées":
           findUpcoming(user.token, pageIndex)
             .then(setListFilms)
             .catch(() => setError("Erreur lors du chargement des films"))
             .finally(() => setIsLoading(false));
           break;
-        case 'Films Populaires':
+        case "Films Populaires":
           findMostPopular(user.token, pageIndex)
             .then(setListFilms)
             .catch(() => setError("Erreur lors du chargement des films"))
@@ -86,14 +90,15 @@ export default function Home() {
       }
     };
 
-    loadFilms();  // Appeler cette fonction à chaque changement de pageIndex
-
-
-  }, [pageIndex, Title]);  // Ajout de Title pour recharger les films si le type change également
+    loadFilms(); // Appeler cette fonction à chaque changement de pageIndex
+  }, [pageIndex, Title]); // Ajout de Title pour recharger les films si le type change également
 
   useEffect(() => {
     const handleClickOutside = (event: any) => {
-      if (containerRef.current && !containerRef.current.contains(event.target as Node)) {
+      if (
+        containerRef.current &&
+        !containerRef.current.contains(event.target as Node)
+      ) {
         setIsInputFocused(false);
       }
     };
@@ -101,10 +106,11 @@ export default function Home() {
     return () => document.removeEventListener("click", handleClickOutside);
   }, []); // Ce useEffect ne dépend d'aucune variable mutable et s'exécute une seule fois
 
-
   const handleFilterChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const searchText = event.target.value.toLowerCase();
-    const filtered = genres.filter((genre) => genre.name.toLowerCase().includes(searchText));
+    const filtered = genres.filter((genre) =>
+      genre.name.toLowerCase().includes(searchText)
+    );
     setFilteredGenres(filtered);
   };
 
@@ -115,27 +121,31 @@ export default function Home() {
   const handleMostRateClick = () => {
     findMostRated(user.token, pageIndex).then((res) => setListFilms(res));
     setIsInputFocused(false);
-    setTitle('Films les mieux notés')
+    setTitle("Films les mieux notés");
   };
   const handleUpcomingClick = () => {
     findUpcoming(user.token, pageIndex).then((res) => setListFilms(res));
     setIsInputFocused(false);
-    setTitle('Films qui vont arrivées')
+    setTitle("Films qui vont arrivées");
   };
   const handlePopularClick = () => {
     findMostPopular(user.token, pageIndex).then((res) => setListFilms(res));
     setIsInputFocused(false);
-    setTitle('Films Populaires')
+    setTitle("Films Populaires");
   };
   const handleGenreClick = (genreId: number, genreName: string) => {
-    findMoviesByGenre(user.token, genreId, pageIndex).then((res) => setListFilms(res));
+    findMoviesByGenre(user.token, genreId, pageIndex).then((res) =>
+      setListFilms(res)
+    );
     setIsInputFocused(false);
-    setTitle('Films filtré par ' + genreName)
+    setTitle("Films filtré par " + genreName);
   };
 
   const handleSearch = () => {
-    findMoviesByQuery(user.token, { year, actor, director }).then((res) => setListFilms(res));
-    setTitle('Films filtré par ' + year + actor + director)
+    findMoviesByQuery(user.token, { year, actor, director }).then((res) =>
+      setListFilms(res)
+    );
+    setTitle("Films filtré par " + year + actor + director);
   };
 
   const handleModalOpen = () => {
@@ -148,24 +158,32 @@ export default function Home() {
 
   const handleCreateList = async (listName: string, description: string) => {
     console.log(listName, description);
-    let language = ""
-    createList(user.apiKey, user.token, user.sessionId, listName, description, language).then((res) => {
+    let language = "";
+    createList(
+      user.apiKey,
+      user.token,
+      user.sessionId,
+      listName,
+      description,
+      language
+    ).then((res) => {
       console.log(res);
-
-    })
+    });
   };
 
   return (
     <>
       <Header
-        handleLogoutClick={() => dispatch(deleteUser()) && navigate("/login", { replace: true })}
+        handleLogoutClick={() =>
+          dispatch(deleteUser()) && navigate("/login", { replace: true })
+        }
         handleMostRatedClick={handleMostRateClick}
         handleUpcomingClick={handleUpcomingClick}
         handlePopularClick={handlePopularClick}
       />
 
       <div id="divRecherche">
-        <div id="conteneurRechercheParGenre" >
+        <div id="conteneurRechercheParGenre">
           <div className="containerInput" ref={containerRef}>
             <label htmlFor="filtreByGenre">Filtrer par genre</label>
             <input
@@ -178,7 +196,11 @@ export default function Home() {
             {isInputFocused && (
               <ul className="containerListGenre">
                 {filteredGenres.map((genre) => (
-                  <li key={genre.id} onClick={() => handleGenreClick(genre.id, genre.name)}>{genre.name}</li>
+                  <li
+                    key={genre.id}
+                    onClick={() => handleGenreClick(genre.id, genre.name)}>
+                    {genre.name}
+                  </li>
                 ))}
               </ul>
             )}
@@ -218,8 +240,12 @@ export default function Home() {
           </div>
         </div>
         <div id="containerBtnRecherche">
-          <button className="btn" onClick={handleSearch}>Rechercher</button>
-          <button className="btn" onClick={handleModalOpen}>Créer une liste</button>
+          <button className="btn" onClick={handleSearch}>
+            Rechercher
+          </button>
+          <button className="btn" onClick={handleModalOpen}>
+            Créer une liste
+          </button>
         </div>
       </div>
       <h1>{Title}</h1>
@@ -232,7 +258,11 @@ export default function Home() {
           <button onClick={handleNextPage}>Page suivante</button>
         </div>
       </section>
-      <ModalList isOpen={isModalOpen} onClose={handleModalClose} onCreateList={handleCreateList} />
+      <ModalList
+        isOpen={isModalOpen}
+        onClose={handleModalClose}
+        onCreateList={handleCreateList}
+      />
     </>
   );
 }
