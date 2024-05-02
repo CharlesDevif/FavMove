@@ -4,6 +4,11 @@ import { toast } from "react-toastify";
 import { useSessionStorage } from "usehooks-ts";
 import { useNavigate } from "react-router-dom";
 import { StrapiResponse, loginStrapiUser } from "../../../lib/strapi.usersApi";
+import {
+  createReqToken,
+  redirectToAuthorization,
+} from "../../../lib/verifTokenApi";
+import { environment } from "../../../environments/environment";
 
 interface UserCredentials {
   email: string;
@@ -47,6 +52,11 @@ export default function Login() {
     loginStrapiUser(credentials.email, credentials.password)
       .then((response) => {
         setStrapiUser(response);
+        createReqToken(environment.tmdbToken)
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+          .then((res: any) => {
+            redirectToAuthorization(res.request_token);
+          });
         navigate("/");
       })
       .catch((error) => {
