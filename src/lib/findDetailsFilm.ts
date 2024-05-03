@@ -1,7 +1,7 @@
 import { environment } from "../environments/environment";
 import { DetailedFilm } from "../type/films";
 
-export async function findDetailsFilm(id: number): Promise<DetailedFilm> {
+export async function findDetailsFilm(id: string): Promise<DetailedFilm> {
   const options = {
     method: "GET",
     headers: {
