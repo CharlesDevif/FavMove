@@ -3,6 +3,7 @@ import { Film } from "../type/films.ts";
 import { AppDispatch } from "./store.ts";
 import favoriFilms from "../lib/favoriFilms.ts";
 import addfavoriFilms from "../lib/addFavoriFilms.ts";
+import { StrapiResponse } from "../lib/strapi.usersApi.ts";
 
 export interface RepponseI {
     success: boolean
@@ -13,13 +14,10 @@ export interface RepponseI {
 
 const initialState: number[] = [];
 
-export const asyncShowFavori = (token: string, account: string, page: number) => {
-
+export const asyncShowFavori = (strapiUser :StrapiResponse) => {
 
     return async (dispatch: AppDispatch) => {
-        await favoriFilms(token, account, page).then((res) => {
-            console.log(res);
-            
+        await favoriFilms(strapiUser).then((res) => { 
             dispatch(showFavori(res));
         });
     };

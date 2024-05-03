@@ -3,19 +3,13 @@ import { StrapiResponse } from "../lib/strapi.usersApi";
 
 interface UserState {
   token: string;
-  sessionId: string;
   apiKey: string;
-  username: string;
-  accountId: string;
   strapiUser: StrapiResponse | undefined;
 }
 
 const initialState: UserState = {
   token: "",
-  sessionId: "",
   apiKey: "",
-  username: "",
-  accountId: "",
   strapiUser: undefined,
 };
 

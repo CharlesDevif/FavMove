@@ -1,11 +1,14 @@
 import { Film } from "../type/films";
+import { StrapiResponse } from "./strapi.usersApi";
+import { environment } from "../environments/environment";
 
-export default async function favoriFilms(tokenKey: string, account: string, page: number): Promise<Film[]> {
+
+export default async function favoriFilms(strapiUser:StrapiResponse): Promise<Film[]> {
     const options = {
         method: "GET",
         headers: {
             accept: "application/json",
-            Authorization: `Bearer ${tokenKey}`,
+            Authorization: `Bearer ${environment.strapiApiKey}`,
         },
     }
 

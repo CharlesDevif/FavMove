@@ -52,11 +52,10 @@ export default function Login() {
     loginStrapiUser(credentials.email, credentials.password)
       .then((response) => {
         setStrapiUser(response);
-        createReqToken(environment.tmdbToken)
-          // eslint-disable-next-line @typescript-eslint/no-explicit-any
-          .then((res: any) => {
-            redirectToAuthorization(res.request_token);
-          });
+        // createReqToken(environment.tmdbToken)
+        //   .then((res: any) => {
+        //     redirectToAuthorization(res.request_token);
+        //   });
         navigate("/");
       })
       .catch((error) => {
