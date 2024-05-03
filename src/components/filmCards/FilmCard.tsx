@@ -1,34 +1,34 @@
 import "./filmCardStyle.css";
-import { useAppDispatch, useAppSelector } from "../../store/hook";
-import { asyncAddFavori, asyncRemoveFavori } from "../../store/favoriStore";
+// import { useAppDispatch, useAppSelector } from "../../store/hook";
 import { useNavigate } from "react-router-dom";
 import { Film } from "../../type/films";
 
-export default function FilmCard(film: Film) {
-  const favori = useAppSelector((store) => store.favori);
-  const isFavori = favori.includes(film.id);
-  const user = useAppSelector((store) => store.user);
+export default function FilmCard(props: { film: Film }) {
+  // const favori = useAppSelector((store) => store.favori);
+  // const isFavori = favori.includes(props.film.id);
+  // const user = useAppSelector((store) => store.user);
+  const isFavori = false;
 
   const navigate = useNavigate();
 
   const goToFilmDetails = () => {
-    navigate(`/film/${film.id}`);
+    navigate(`/film/${props.film.id}`);
   };
 
-  const dispatch = useAppDispatch();
+  // const dispatch = useAppDispatch();
 
   const handleDeleteFavori = async (
     event: React.MouseEvent<HTMLButtonElement>
   ) => {
     event.stopPropagation(); // Stop the event from bubbling up to the parent
-    dispatch(asyncRemoveFavori(user.token, user.sessionId, film.id, false));
+    //dispatch(asyncRemoveFavori(user.token, user.sessionId, film.id, false));
   };
 
   const handleAddFavori = async (
     event: React.MouseEvent<HTMLButtonElement>
   ) => {
     event.stopPropagation(); // Stop the event from bubbling up to the parent
-    dispatch(asyncAddFavori(user.token, user.sessionId, film.id, true));
+    //dispatch(asyncAddFavori(user.token, user.sessionId, film.id, true));
   };
 
   const getRatingColor = (rating: number) => {
@@ -37,10 +37,10 @@ export default function FilmCard(film: Film) {
     else return "red";
   };
 
-  const ratingColor = getRatingColor(film.vote_average);
+  const ratingColor = getRatingColor(props.film.vote_average);
 
   const imgCardStyle = {
-    backgroundImage: `url(https://image.tmdb.org/t/p/original/${film.poster_path})`,
+    backgroundImage: `url(https://image.tmdb.org/t/p/original/${props.film.poster_path})`,
     backgroundSize: "cover",
     backgroundPosition: "center",
   };
@@ -54,7 +54,7 @@ export default function FilmCard(film: Film) {
         <div className="filmDetails">
           <div className="filmStats" style={{ color: ratingColor }}>
             <span className="voteAverage">
-              Note: {film.vote_average.toFixed(1)} / 10
+              Note: {props.film.vote_average.toFixed(1)} / 10
             </span>
           </div>
         </div>

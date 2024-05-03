@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import React, { useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAppDispatch, useAppSelector } from "../../../store/hook";
@@ -16,6 +17,7 @@ import { deleteUser } from "../../../store/userStore";
 import ModalList from "../../modal/ModalList";
 import { createList } from "../../../lib/listeReq";
 import Header from "../../header/Header";
+import { toast } from "react-toastify";
 
 export default function Home() {
   const isMounted = useRef<boolean>(false);
@@ -158,15 +160,8 @@ export default function Home() {
 
   const handleCreateList = async (listName: string, description: string) => {
     console.log(listName, description);
-    let language = "";
-    createList(
-      user.apiKey,
-      user.token,
-      user.sessionId,
-      listName,
-      description,
-      language
-    ).then((res) => {
+    createList(listName, description, user.strapiUser).then((res) => {
+      toast.success("Votre liste vient d'être créée !");
       console.log(res);
     });
   };

@@ -1,25 +1,37 @@
-import { Film } from "../type/films";
-import { StrapiResponse } from "./strapi.usersApi";
+import { DetailedFilm } from "../type/films";
+import { StrapiResponse } from "./strapi.auth.api";
 import { environment } from "../environments/environment";
+import { IStrapiUser } from "../type/strapi.types";
+import { findDetailsFilm } from "./findDetailsFilm";
 
+export default async function favoriFilms(
+  strapiUser: StrapiResponse
+): Promise<DetailedFilm[]> {
+  const options = {
+    method: "GET",
+    headers: {
+      accept: "application/json",
+      Authorization: `Bearer ${environment.strapiApiKey}`,
+    },
+  };
 
-export default async function favoriFilms(strapiUser:StrapiResponse): Promise<Film[]> {
-    const options = {
-        method: "GET",
-        headers: {
-            accept: "application/json",
-            Authorization: `Bearer ${environment.strapiApiKey}`,
-        },
-    }
+  const res = await fetch(
+    `http://localhost:1337/api/users/${strapiUser.user.id}?populate=*`,
+    options
+  );
 
-    const res = await fetch(`https://api.themoviedb.org/3/account/${account}/favorite/movies?page=${page}&sort_by=created_at.asc`, options);
-    
-    if (!res.ok) {
-        throw new Error(`Error fetching favori films: ${res.statusText}`);
-    }
+  if (!res.ok) {
+    throw new Error(`Error fetching favori films: ${res.statusText}`);
+  }
 
-    const data = await res.json();
-    console.log(data);
+  const films: DetailedFilm[] = [];
 
-    return data.results; 
+  // Ici, on a **toutes** les infos de l'utilisateur dont les id des film
+  const data: IStrapiUser = await res.json();
+  data.film_lists.forEach(async (film) => {
+    const detailedFilm = await findDetailsFilm(film.id);
+    films.push(detailedFilm);
+  });
+
+  return films;
 }

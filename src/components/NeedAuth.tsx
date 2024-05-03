@@ -4,14 +4,13 @@ import { useAppDispatch, useAppSelector } from "../store/hook";
 import { addUser } from "../store/userStore";
 import { asyncShowFavori } from "../store/favoriStore";
 import { useSessionStorage } from "usehooks-ts";
-import { StrapiResponse } from "../lib/strapi.usersApi";
+import { StrapiResponse } from "../lib/strapi.auth.api";
 import { environment } from "../environments/environment";
 
 export default function NeedAuth({ children }: PropsWithChildren) {
   const location = useLocation();
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
-//   const [session, setSession] = useSessionStorage("session", "");
   const [token] = useSessionStorage("token", environment.tmdbToken);
   const [apiKey] = useSessionStorage("apiKey", environment.tmdbApiKey);
   const [strapiUserStorage] = useSessionStorage<StrapiResponse | undefined>(
@@ -41,16 +40,17 @@ export default function NeedAuth({ children }: PropsWithChildren) {
       }
     }
     handleSession();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   if (userRedux.strapiUser && userRedux.token) {
     if (favori.length === 0) {
-    //   dispatch(asyncShowFavori(userRedux.strapiUser));
+      dispatch(asyncShowFavori(userRedux.strapiUser));
     }
     return children;
   } else if (token && apiKey && strapiUserStorage) {
     if (favori.length === 0) {
-    //   dispatch(asyncShowFavori(strapiUserStorage));
+      dispatch(asyncShowFavori(strapiUserStorage));
     }
     dispatch(
       addUser({

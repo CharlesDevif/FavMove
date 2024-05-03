@@ -1,5 +1,5 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { StrapiResponse } from "../lib/strapi.usersApi";
+import { StrapiResponse } from "../lib/strapi.auth.api";
 
 interface UserState {
   token: string;

@@ -1,17 +1,19 @@
 import { environment } from "../environments/environment";
+import { IStrapiUser } from "../type/strapi.types";
 
 export interface StrapiResponse {
   jwt: string;
-  user: {
-    id: number;
-    username: string;
-    email: string;
-    provider: string;
-    confirmed: true;
-    blocked: false;
-    createdAt: string;
-    updatedAt: string;
-  };
+  user: Pick<
+    IStrapiUser,
+    | "id"
+    | "username"
+    | "email"
+    | "provider"
+    | "confirmed"
+    | "blocked"
+    | "createdAt"
+    | "updatedAt"
+  >;
 }
 
 export async function loginStrapiUser(
@@ -43,7 +45,18 @@ export async function loginStrapiUser(
   return data;
 }
 
-export type StrapiUserResponse = Pick<StrapiResponse, "user">;
+export type StrapiUserResponse = Pick<
+  IStrapiUser,
+  | "id"
+  | "username"
+  | "email"
+  | "provider"
+  | "confirmed"
+  | "blocked"
+  | "createdAt"
+  | "updatedAt"
+  | "role"
+>;
 
 export async function registerStrapiUser(
   email: string,

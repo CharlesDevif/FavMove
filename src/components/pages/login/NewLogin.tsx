@@ -3,12 +3,7 @@ import "./loginStyle.css";
 import { toast } from "react-toastify";
 import { useSessionStorage } from "usehooks-ts";
 import { useNavigate } from "react-router-dom";
-import { StrapiResponse, loginStrapiUser } from "../../../lib/strapi.usersApi";
-import {
-  createReqToken,
-  redirectToAuthorization,
-} from "../../../lib/verifTokenApi";
-import { environment } from "../../../environments/environment";
+import { StrapiResponse, loginStrapiUser } from "../../../lib/strapi.auth.api";
 
 interface UserCredentials {
   email: string;

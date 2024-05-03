@@ -2,7 +2,7 @@ import { ChangeEvent, FormEvent, useEffect, useRef, useState } from "react";
 import "./loginStyle.css";
 import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
-import { registerStrapiUser } from "../../../lib/strapi.usersApi";
+import { registerStrapiUser } from "../../../lib/strapi.auth.api";
 
 interface UserCredentials {
   email: string;
