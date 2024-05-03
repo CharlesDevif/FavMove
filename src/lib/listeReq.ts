@@ -10,7 +10,7 @@ export async function createList(
   name: string,
   description: string,
   strapiUser?: StrapiResponse
-): Promise<IStrapiFilmList> {
+): Promise<IStrapiFilmList | undefined> {
   const url = `http://localhost:1337/api/film-lists`;
 
   const options = {
@@ -32,6 +32,11 @@ export async function createList(
   };
 
   const response: any = await fetch(url, options);
+
+  if (!response.ok) {
+    return undefined;
+  }
+
   const json = response.json();
   return {
     id: json.data.id,
@@ -192,5 +197,46 @@ export async function fetchLists(
       user: undefined,
     });
   });
-  return await response.json();
+  return filmLists;
+}
+
+export async function getFilmListbyName(
+  name: string,
+  strapiUser: StrapiResponse
+): Promise<IStrapiFilmList | undefined> {
+  const url = `http://localhost:1337/api/film-lists?filters[name][$eq]=${name}&filters[user][$eq]=${strapiUser.user.id}&populate=*`;
+  const options = {
+    method: "GET",
+    headers: {
+      accept: "application/json",
+      Authorization: `Bearer ${environment.strapiApiKey}`,
+    },
+  };
+
+  const response = await fetch(url, options);
+
+  if (!response.ok) {
+    return undefined;
+  }
+
+  const json = await response.json();
+  const films: IStrapiFilm[] = [];
+  const filmLists: IStrapiFilmList = {
+    id: json.data.id,
+    name: json.data.attributes.name,
+    createdAt: json.data.attributes.createdAt,
+    updatedAt: json.data.attributes.updatedAt,
+    description: json.data.attributes.description,
+    films: json.data.attributes.films.data.forEach((filmData: any) => {
+      films.push({
+        id: filmData.id,
+        filmId: filmData.attributes.filmID,
+        createdAt: filmData.attributes.createdAt,
+        updatedAt: filmData.attributes.updatedAt,
+        commentaires: [],
+      });
+    }),
+    user: undefined,
+  };
+  return filmLists;
 }

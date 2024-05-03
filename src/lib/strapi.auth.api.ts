@@ -1,5 +1,6 @@
 import { environment } from "../environments/environment";
 import { IStrapiUser } from "../type/strapi.types";
+import { createList, getFilmListbyName } from "./listeReq";
 
 export interface StrapiResponse {
   jwt: string;
@@ -42,6 +43,12 @@ export async function loginStrapiUser(
   }
 
   const data: StrapiResponse = await res.json();
+
+  const isFavoriteListExisting = await getFilmListbyName("favoris", data);
+  if (!isFavoriteListExisting) {
+    await createList("favoris", "Votre liste de films favoris.", data);
+  }
+
   return data;
 }
 
@@ -96,5 +103,6 @@ export async function registerStrapiUser(
   }
 
   const data: StrapiUserResponse = await res.json();
+
   return data;
 }
