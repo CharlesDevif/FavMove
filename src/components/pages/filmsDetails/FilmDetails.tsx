@@ -18,7 +18,7 @@ export default function FilmDetails() {
 
     useEffect(() => {
         if (!isMounted.current) {
-            findDetailsFilm(token, filmId).then((res) => {
+            findDetailsFilm(filmId).then((res) => {
 				console.log(res);
                 setDetailsFilm(res);
                 setIsLoading(false);

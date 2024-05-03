@@ -68,7 +68,7 @@ export type StrapiUserResponse = Pick<
 export async function registerStrapiUser(
   email: string,
   password: string,
-  username?: string
+  username: string
 ): Promise<StrapiUserResponse> {
   const options = {
     method: "POST",
@@ -79,7 +79,7 @@ export async function registerStrapiUser(
     },
     body: JSON.stringify({
       username:
-        username ?? Math.floor(Math.random() * 10000 + 10000).toString(), // TODO: Ajouter un champ "username" -> OBLIGATOIRE dans Strapi
+        username,
       email: email,
       password: password,
       provider: "local",

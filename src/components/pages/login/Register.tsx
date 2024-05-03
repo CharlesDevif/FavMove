@@ -6,6 +6,7 @@ import { registerStrapiUser } from "../../../lib/strapi.auth.api";
 
 interface UserCredentials {
   email: string;
+  username: string;
   password: string;
   confirmPassword: string;
 }
@@ -15,6 +16,7 @@ export default function Register() {
   const navigate = useNavigate();
   const [credentials, setCredentials] = useState<UserCredentials>({
     email: "",
+    username: "",
     password: "",
     confirmPassword: "",
   });
@@ -38,12 +40,18 @@ export default function Register() {
 
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    if (!credentials.password || !credentials.email || !credentials.username) {
+     return toast.error("All info required.");
+    }
     if (credentials.password !== credentials.confirmPassword) {
       toast.error("Passwords do not match.");
       return;
     }
+    if (credentials.password.length < 6) {
+      return toast.error("Passwords to low.");
+    }
 
-    registerStrapiUser(credentials.email, credentials.password)
+    registerStrapiUser(credentials.email,credentials.username, credentials.password)
       .then((response) => {
         if (response) {
           toast.success(
@@ -72,6 +80,16 @@ export default function Register() {
                   type="email"
                   id="emailForm"
                   name="email"
+                  onChange={handleChange}
+                  required
+                />
+              </div>
+              <div className="divInputConteneur">
+                <label htmlFor="usernameForm">Username</label>
+                <input
+                  type="username"
+                  id="usernameForm"
+                  name="username"
                   onChange={handleChange}
                   required
                 />
