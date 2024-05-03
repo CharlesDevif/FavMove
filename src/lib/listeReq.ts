@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { toast } from "react-toastify";
 import { environment } from "../environments/environment";
-import { IStrapiFilmList } from "../type/strapi.types";
+import { IStrapiFilm, IStrapiFilmList } from "../type/strapi.types";
 import { StrapiResponse } from "./strapi.auth.api";
 import { addFilm, getFilmByFilmID } from "./strapi.films";
 
@@ -45,7 +45,7 @@ export async function createList(
 }
 
 // Supprimer une liste
-export async function deleteList(listId: number): Promise<number> {
+export async function deleteList(listId: number): Promise<number | undefined> {
   const url = `http://localhost:1337/api/film-lists/${listId}`;
   const options = {
     method: "DELETE",
@@ -55,8 +55,13 @@ export async function deleteList(listId: number): Promise<number> {
     },
   };
 
-  const response: any = await fetch(url, options);
-  const json = response.json();
+  const response = await fetch(url, options);
+
+  if (!response.ok) {
+    return undefined;
+  }
+
+  const json = await response.json();
   return json.data.id;
 }
 
@@ -91,7 +96,7 @@ export async function addFilmToList(
   };
 
   const response = await fetch(url, options);
-  return response.json();
+  return await response.json();
 }
 
 // Supprimer un film d'une liste
@@ -147,21 +152,45 @@ export async function removeFilmFromList(
 
 // Récupérer toutes les listes de films de l'utilisateur
 export async function fetchLists(
-  tokenKey: string,
-  accountId: string,
-  sessionId: string
-): Promise<any> {
-  const url = `https://api.themoviedb.org/3/account/${accountId}/lists?page=1&session_id=${sessionId}`;
+  strapiUser?: StrapiResponse
+): Promise<IStrapiFilmList[]> {
+  const url = `http://localhost:1337/api/film-lists?filters[user][$eq]=${strapiUser?.user.id}&populate=*`;
   const options = {
     method: "GET",
     headers: {
       accept: "application/json",
-      Authorization: `Bearer ${tokenKey}`,
+      Authorization: `Bearer ${environment.strapiApiKey}`,
     },
   };
-  console.log(url);
 
   const response = await fetch(url, options);
 
-  return response.json();
+  if (!response.ok) {
+    return [];
+  }
+
+  const json = await response.json();
+  const filmLists: IStrapiFilmList[] = [];
+  let films: IStrapiFilm[] = [];
+  json.data.forEach((element: any) => {
+    films = [];
+    filmLists.push({
+      id: element.id,
+      name: element.attributes.name,
+      createdAt: element.attributes.createdAt,
+      updatedAt: element.attributes.updatedAt,
+      description: element.attributes.description,
+      films: element.attributes.films.data.forEach((filmData: any) => {
+        films.push({
+          id: filmData.id,
+          filmId: filmData.attributes.filmID,
+          createdAt: filmData.attributes.createdAt,
+          updatedAt: filmData.attributes.updatedAt,
+          commentaires: [],
+        });
+      }),
+      user: undefined,
+    });
+  });
+  return await response.json();
 }
