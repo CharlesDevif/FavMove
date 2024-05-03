@@ -45,12 +45,12 @@ export default function NeedAuth({ children }: PropsWithChildren) {
 
   if (userRedux.strapiUser && userRedux.token) {
     if (favori.length === 0) {
-      dispatch(asyncShowFavori(userRedux.strapiUser));
+    //   dispatch(asyncShowFavori(userRedux.strapiUser));
     }
     return children;
   } else if (token && apiKey && strapiUserStorage) {
     if (favori.length === 0) {
-      dispatch(asyncShowFavori(strapiUserStorage));
+    //   dispatch(asyncShowFavori(strapiUserStorage));
     }
     dispatch(
       addUser({
