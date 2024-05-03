@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { toast } from "react-toastify";
 import { environment } from "../environments/environment";
-import { IStrapiFilm, IStrapiFilmList } from "../type/strapi.types";
+import { IStrapiFilmList } from "../type/strapi.types";
 import { StrapiResponse } from "./strapi.auth.api";
 import { addFilm, getFilmByFilmID } from "./strapi.films";
 
@@ -38,15 +38,8 @@ export async function createList(
   }
 
   const json = response.json();
-  return {
-    id: json.data.id,
-    name: json.data.attributes.name,
-    description: json.data.attributes.description,
-    createdAt: json.data.attributes.createdAt,
-    updatedAt: json.data.attributes.updatedAt,
-    films: [],
-    user: undefined,
-  };
+
+  return json.data;
 }
 
 // Supprimer une liste
@@ -175,28 +168,7 @@ export async function fetchLists(
   }
 
   const json = await response.json();
-  const filmLists: IStrapiFilmList[] = [];
-  let films: IStrapiFilm[] = [];
-  json.data.forEach((element: any) => {
-    films = [];
-    filmLists.push({
-      id: element.id,
-      name: element.attributes.name,
-      createdAt: element.attributes.createdAt,
-      updatedAt: element.attributes.updatedAt,
-      description: element.attributes.description,
-      films: element.attributes.films.data.forEach((filmData: any) => {
-        films.push({
-          id: filmData.id,
-          filmId: filmData.attributes.filmID,
-          createdAt: filmData.attributes.createdAt,
-          updatedAt: filmData.attributes.updatedAt,
-          commentaires: [],
-        });
-      }),
-      user: undefined,
-    });
-  });
+  const filmLists: IStrapiFilmList[] = json.data;
   return filmLists;
 }
 
@@ -220,23 +192,12 @@ export async function getFilmListbyName(
   }
 
   const json = await response.json();
-  const films: IStrapiFilm[] = [];
-  const filmLists: IStrapiFilmList = {
-    id: json.data.id,
-    name: json.data.attributes.name,
-    createdAt: json.data.attributes.createdAt,
-    updatedAt: json.data.attributes.updatedAt,
-    description: json.data.attributes.description,
-    films: json.data.attributes.films.data.forEach((filmData: any) => {
-      films.push({
-        id: filmData.id,
-        filmId: filmData.attributes.filmID,
-        createdAt: filmData.attributes.createdAt,
-        updatedAt: filmData.attributes.updatedAt,
-        commentaires: [],
-      });
-    }),
-    user: undefined,
-  };
-  return filmLists;
+  console.log(json);
+
+  if (json.data.length != 0) {
+    const filmLists: IStrapiFilmList = json.data;
+    return filmLists;
+  }
+
+  return undefined;
 }
