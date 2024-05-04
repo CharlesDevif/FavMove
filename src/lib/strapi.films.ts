@@ -2,15 +2,10 @@
 import { environment } from "../environments/environment";
 import { IStrapiFilm } from "../type/strapi.types";
 
-type StrapiFilmType = Pick<
-  IStrapiFilm,
-  "id" | "filmId" | "createdAt" | "updatedAt"
->;
-
 export async function addFilm(
   filmID: string
-): Promise<StrapiFilmType | undefined> {
-  const url = `http://localhost:1337/api/films`;
+): Promise<IStrapiFilm | undefined> {
+  const url = `http://localhost:1337/api/films?populate=*`;
   const options = {
     method: "POST",
     headers: {
@@ -33,18 +28,19 @@ export async function addFilm(
   }
 
   const json: any = await response.json();
-  const addedFilm: StrapiFilmType = {
+  const addedFilm: IStrapiFilm = {
     id: json.data.id,
     filmId: json.data.attributes.filmID,
     createdAt: json.data.attributes.createdAt,
     updatedAt: json.data.attributes.updatedAt,
+    commentaires: undefined,
   };
 
   return addedFilm;
 }
 
 export async function deleteFilm(filmID: string): Promise<number | undefined> {
-  const url = `http://localhost:1337/api/films/${filmID}`;
+  const url = `http://localhost:1337/api/films/${filmID}?populate=*`;
   const options = {
     method: "DELETE",
     headers: {
@@ -87,12 +83,21 @@ export async function getFilmByFilmID(
   }
 
   const json: any = await response.json();
+
+  if (json.data.length == 0) {
+    // Ajouter le film à Strapi
+    const film = await addFilm(filmID);
+    if (film) {
+      return film;
+    }
+  }
+
   const film: IStrapiFilm = {
-    id: json.data.id,
-    filmId: json.data.attributes.filmID,
-    createdAt: json.data.attributes.createdAt,
-    updatedAt: json.data.attributes.updatedAt,
-    commentaires: json.data.attributes.commentaires,
+    id: json.data[0].id,
+    filmId: json.data[0].attributes.filmID,
+    createdAt: json.data[0].attributes.createdAt,
+    updatedAt: json.data[0].attributes.updatedAt,
+    commentaires: json.data[0].attributes.commentaires,
   };
 
   return film;

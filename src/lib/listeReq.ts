@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { toast } from "react-toastify";
 import { environment } from "../environments/environment";
-import { IStrapiFilmList } from "../type/strapi.types";
+import { IStrapiFilm, IStrapiFilmList } from "../type/strapi.types";
 import { StrapiResponse } from "./strapi.auth.api";
 import { addFilm, getFilmByFilmID } from "./strapi.films";
 
@@ -72,7 +72,7 @@ export async function addFilmToList(
 
   let film = await getFilmByFilmID(`${filmId}`);
 
-  if (!film) {
+  if (film == undefined) {
     await addFilm(`${filmId}`);
     film = await getFilmByFilmID(`${filmId}`);
   }
@@ -99,10 +99,10 @@ export async function addFilmToList(
 
 // Supprimer un film d'une liste
 export async function removeFilmFromList(
-  listId: string,
-  filmId: string
+  listId: number,
+  filmId: number
 ): Promise<IStrapiFilmList | undefined> {
-  const url = `http://localhost:1337/api/film-lists/${listId}`;
+  const url = `http://localhost:1337/api/film-lists/${listId}?populate=*`;
 
   const film = await getFilmByFilmID(`${filmId}`);
 
@@ -136,14 +136,29 @@ export async function removeFilmFromList(
 
   const json = await response.json();
 
+  const films: IStrapiFilm[] = [];
+
+  json.data.attributes.films.data.forEach((filmData: any) => {
+    films.push({
+      id: filmData.id,
+      commentaires: undefined,
+      createdAt: filmData.attributes.createdAt,
+      filmId: filmData.attributes.filmID,
+      updatedAt: filmData.attributes.updatedAt,
+    });
+  });
+
   const updatedFilmList: IStrapiFilmList = {
     id: json.data.id,
     name: json.data.attributes.name,
     description: json.data.attributes.description,
     createdAt: json.data.attributes.createdAt,
     updatedAt: json.data.attributes.updatedAt,
-    films: { ...json.data.attributes.films.data },
-    user: { ...json.data.attributes.user.data },
+    films: films,
+    user: {
+      id: json.data.attributes.user.data.id,
+      ...json.data.attributes.user.data.attributes,
+    },
   };
   return updatedFilmList;
 }
@@ -194,9 +209,22 @@ export async function getFilmListbyName(
   const json = await response.json();
 
   if (json.data.length != 0) {
+    const films: IStrapiFilm[] = [];
+
+    json.data[0].attributes.films.data.forEach((filmData: any) => {
+      films.push({
+        id: filmData.id,
+        commentaires: undefined,
+        createdAt: filmData.attributes.createdAt,
+        filmId: filmData.attributes.filmID,
+        updatedAt: filmData.attributes.updatedAt,
+      });
+    });
+
     const filmLists: IStrapiFilmList = {
-      ...json.data,
-      films: { ...json.data[0].attributes.films.data },
+      id: json.data[0].id,
+      ...json.data[0].attributes,
+      films: films,
     };
 
     return filmLists;

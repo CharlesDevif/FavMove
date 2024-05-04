@@ -45,7 +45,6 @@ export async function loginStrapiUser(
   const data: StrapiResponse = await res.json();
 
   const isFavoriteListExisting = await getFilmListbyName("favoris", data);
-  console.log(isFavoriteListExisting);
 
   if (isFavoriteListExisting == undefined) {
     await createList("favoris", "Votre liste de films favoris.", data);

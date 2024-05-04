@@ -93,7 +93,7 @@ export default function Home() {
     };
 
     loadFilms(); // Appeler cette fonction à chaque changement de pageIndex
-  }, [pageIndex, Title]); // Ajout de Title pour recharger les films si le type change également
+  }, [pageIndex, Title, user.token]); // Ajout de Title pour recharger les films si le type change également
 
   useEffect(() => {
     const handleClickOutside = (event: any) => {

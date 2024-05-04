@@ -1,34 +1,77 @@
 import "./filmCardStyle.css";
-// import { useAppDispatch, useAppSelector } from "../../store/hook";
 import { useNavigate } from "react-router-dom";
 import { Film } from "../../type/films";
+import { toast } from "react-toastify";
+import {
+  addFilmToList,
+  getFilmListbyName,
+  removeFilmFromList,
+} from "../../lib/listeReq";
+import { useAppSelector } from "../../store/hook";
+import { useState } from "react";
 
 export default function FilmCard(props: { film: Film }) {
-  // const favori = useAppSelector((store) => store.favori);
-  // const isFavori = favori.includes(props.film.id);
-  // const user = useAppSelector((store) => store.user);
-  const isFavori = false;
-
+  const user = useAppSelector((store) => store.user);
+  const [isFavori, setIsFavori] = useState<boolean>(false);
   const navigate = useNavigate();
+
+  if (user.strapiUser) {
+    getFilmListbyName("favoris", user.strapiUser)
+      .then((list) => {
+        if (list) {
+          list.films.forEach((film) => {
+            if (film.filmId == `${props.film.id}`) {
+              setIsFavori(true);
+            }
+          });
+        }
+      })
+      .catch(() => {
+        toast.error(
+          "Une erreur s'est produite, veuillez actualiser votre navigateur."
+        );
+      });
+  }
 
   const goToFilmDetails = () => {
     navigate(`/film/${props.film.id}`);
   };
 
-  // const dispatch = useAppDispatch();
-
   const handleDeleteFavori = async (
     event: React.MouseEvent<HTMLButtonElement>
   ) => {
     event.stopPropagation(); // Stop the event from bubbling up to the parent
-    //dispatch(asyncRemoveFavori(user.token, user.sessionId, film.id, false));
+    if (user.strapiUser) {
+      const favoriList = await getFilmListbyName("favoris", user.strapiUser);
+      if (favoriList) {
+        const isFilmRemoved = await removeFilmFromList(
+          favoriList.id,
+          props.film.id
+        );
+        if (isFilmRemoved != undefined) {
+          toast.success("Film retiré de la liste.");
+          setIsFavori(false);
+        } else {
+          console.log("wesh");
+
+          setIsFavori(false);
+        }
+      }
+    }
   };
 
   const handleAddFavori = async (
     event: React.MouseEvent<HTMLButtonElement>
   ) => {
     event.stopPropagation(); // Stop the event from bubbling up to the parent
-    //dispatch(asyncAddFavori(user.token, user.sessionId, film.id, true));
+    if (user.strapiUser) {
+      const favoriList = await getFilmListbyName("favoris", user.strapiUser);
+      if (favoriList) {
+        await addFilmToList(favoriList.id, props.film.id);
+        toast.success("Film ajouté de la liste.");
+        setIsFavori(true);
+      }
+    }
   };
 
   const getRatingColor = (rating: number) => {
@@ -43,6 +86,10 @@ export default function FilmCard(props: { film: Film }) {
     backgroundImage: `url(https://image.tmdb.org/t/p/original/${props.film.poster_path})`,
     backgroundSize: "cover",
     backgroundPosition: "center",
+  };
+
+  const handleAddToList = () => {
+    toast.warning("Fonctionnalité non implémentée...");
   };
 
   return (
@@ -69,7 +116,9 @@ export default function FilmCard(props: { film: Film }) {
             </button>
           )}
           <div id="addToList">
-            <button className="ajout">Ajouter à voir</button>
+            <button className="ajout" onClick={handleAddToList}>
+              Ajouter à voir
+            </button>
           </div>
         </div>
       </div>
