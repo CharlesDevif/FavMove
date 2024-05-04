@@ -45,5 +45,5 @@ export interface IStrapiFilm {
   filmId: string;
   createdAt: string;
   updatedAt: string;
-  commentaires: IStrapiCommentaire[];
+  commentaires: IStrapiCommentaire[] | undefined;
 }

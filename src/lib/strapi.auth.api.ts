@@ -48,8 +48,6 @@ export async function loginStrapiUser(
   console.log(isFavoriteListExisting);
 
   if (isFavoriteListExisting == undefined) {
-    console.log("part ici fils de pute");
-
     await createList("favoris", "Votre liste de films favoris.", data);
   }
 
@@ -82,8 +80,7 @@ export async function registerStrapiUser(
       Authorization: `Bearer ${environment.strapiApiKey}`,
     },
     body: JSON.stringify({
-      username:
-        username,
+      username: username,
       email: email,
       password: password,
       provider: "local",

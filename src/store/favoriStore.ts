@@ -14,6 +14,8 @@ export interface RepponseI {
 const initialState: number[] = [];
 
 export const asyncShowFavori = (strapiUser: StrapiResponse) => {
+  console.log("part là");
+
   return async (dispatch: AppDispatch) => {
     await favoriFilms(strapiUser).then((res) => {
       const detailedFilms: unknown = res;

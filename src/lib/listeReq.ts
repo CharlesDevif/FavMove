@@ -194,9 +194,11 @@ export async function getFilmListbyName(
   const json = await response.json();
 
   if (json.data.length != 0) {
-    const filmLists: IStrapiFilmList = {...json.data,films:{...json.data.attributes.films.data}};
-    console.log(filmLists);
-    
+    const filmLists: IStrapiFilmList = {
+      ...json.data,
+      films: { ...json.data[0].attributes.films.data },
+    };
+
     return filmLists;
   }
 

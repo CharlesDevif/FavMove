@@ -2,7 +2,7 @@ import { Navigate, useLocation, useNavigate } from "react-router-dom";
 import { PropsWithChildren, useEffect } from "react";
 import { useAppDispatch, useAppSelector } from "../store/hook";
 import { addUser } from "../store/userStore";
-import { asyncShowFavori } from "../store/favoriStore";
+// import { asyncShowFavori } from "../store/favoriStore";
 import { useSessionStorage } from "usehooks-ts";
 import { StrapiResponse } from "../lib/strapi.auth.api";
 import { environment } from "../environments/environment";
@@ -18,7 +18,7 @@ export default function NeedAuth({ children }: PropsWithChildren) {
     undefined
   );
   const userRedux = useAppSelector((state) => state.user);
-  const favori = useAppSelector((state) => state.favori);
+  // const favori = useAppSelector((state) => state.favori);
 
   useEffect(() => {
     async function handleSession() {
@@ -44,14 +44,14 @@ export default function NeedAuth({ children }: PropsWithChildren) {
   }, []);
 
   if (userRedux.strapiUser && userRedux.token) {
-    if (favori.length === 0) {
-      dispatch(asyncShowFavori(userRedux.strapiUser));
-    }
+    // if (favori.length === 0) {
+    //   dispatch(asyncShowFavori(userRedux.strapiUser));
+    // }
     return children;
   } else if (token && apiKey && strapiUserStorage) {
-    if (favori.length === 0) {
-      dispatch(asyncShowFavori(strapiUserStorage));
-    }
+    // if (favori.length === 0) {
+    //   dispatch(asyncShowFavori(strapiUserStorage));
+    // }
     dispatch(
       addUser({
         token: token,
