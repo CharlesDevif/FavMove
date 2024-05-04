@@ -41,7 +41,7 @@ export default function Register() {
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (!credentials.password || !credentials.email || !credentials.username) {
-     return toast.error("All info required.");
+      return toast.error("All info required.");
     }
     if (credentials.password !== credentials.confirmPassword) {
       toast.error("Passwords do not match.");
@@ -51,7 +51,11 @@ export default function Register() {
       return toast.error("Passwords to low.");
     }
 
-    registerStrapiUser(credentials.email,credentials.username, credentials.password)
+    registerStrapiUser(
+      credentials.email,
+      credentials.password,
+      credentials.username
+    )
       .then((response) => {
         if (response) {
           toast.success(
